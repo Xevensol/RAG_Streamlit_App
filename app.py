@@ -29,7 +29,8 @@ else:
     p1 = st.Page("ChatWithDocs.py", title="Chat With Docs", icon=":material/folder_open:")
     p2 = st.Page("ChatWithWeb.py", title="Chat With Web", icon=":material/language:")
     p3 = st.Page("ChatWithCSV.py", title="Chat With CSV", icon=":material/description:")
+    p4 = st.Page("about.py", title="About", icon=":material/info:")
 
-    pg = st.navigation({"Rag Models:":[p1, p2, p3]})
+    pg = st.navigation({"Rag Models:":[p1, p2, p3, p4]})
     pg.run()
 
