@@ -8,6 +8,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_cohere import CohereEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from heading import get_heading
 from langchain_community.vectorstores import FAISS
 
@@ -16,8 +17,7 @@ get_heading("Chat With Web")
 
 
 gemini_api_key = st.session_state.google_api_key
-# gemini_api_key = os.getenv("GOOGLE_API_KEY")
-cohere_api_key = os.getenv("COHERE_API_KEY")
+
 
 def reset_webpage_chat():
     keys_to_reset = [
@@ -47,7 +47,7 @@ def get_vector_store_from_url(url):
     doc_chunks = text_splitter.split_documents(documents)
 
     # create a vector store
-    vector_store = FAISS.from_documents(doc_chunks, CohereEmbeddings(cohere_api_key="lrTvYBfI3ybCfps5sSl4tg7umvkgpf5WNPelLLjn"))
+    vector_store = FAISS.from_documents(doc_chunks, HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"))
     return  vector_store
 
 
