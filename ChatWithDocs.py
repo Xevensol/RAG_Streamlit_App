@@ -10,6 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_cohere import CohereEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from heading import get_heading
 from PyPDF2 import PdfReader
@@ -20,8 +21,6 @@ get_heading("Chat With Documents")
 
 load_dotenv()
 google_api_key = st.session_state.google_api_key
-# gemini_api_key = os.getenv("GOOGLE_API_KEY")
-cohere_api_key = os.getenv("COHERE_API_KEY")
 
 
 
@@ -99,7 +98,7 @@ def get_text_chunks(text, filename):
 
 
 def get_vectorstore(text_chunks_list):
-    embeddings = CohereEmbeddings(cohere_api_key=cohere_api_key)
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     vectorstore = FAISS.from_documents(documents=text_chunks_list, embedding=embeddings)
     return vectorstore
 
