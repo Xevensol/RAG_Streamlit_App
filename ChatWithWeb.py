@@ -134,9 +134,11 @@ with st.sidebar:
         st.session_state.current_url = website_url
 
         with st.spinner("Processing..."):
-
-            st.session_state.vector_store = get_vector_store_from_url(website_url)
-        st.session_state.file_processed = True
+            try:
+                st.session_state.vector_store = get_vector_store_from_url(website_url)
+                st.session_state.file_processed = True
+            except Exception as e:
+                st.write(f"An Error has occurred \n\n{e}")
 
     with columns[1]:
         st.button(
@@ -164,12 +166,14 @@ if st.session_state.file_processed:
             st.write(user_query)
 
         with st.spinner("Thinking..."):
-            response = get_response(user_query)
-
-            with st.chat_message("AI", avatar="bot.png"):
-                
-                st.write(response)
-
+            try:
+                response = get_response(user_query)
+    
+                with st.chat_message("AI", avatar="bot.png"):
+                    st.write(response)
+                    
+            except Exception as e:
+                 st.write(f"An Error has occurred \n\n{e}")
 
         st.session_state.chat_history_web.append(AIMessage(content=response))
 
