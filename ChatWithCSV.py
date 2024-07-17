@@ -81,10 +81,15 @@ if st.session_state.csv_file_content is not None:
         with st.chat_message("Human", avatar="human.png"):
             st.write(user_query)
         with st.spinner("Thinking..."):
+          try:
             response = get_response(user_query, csv_file)
             
             with st.chat_message("AI", avatar="bot.png"):
                 st.write(response)
+              
+          except Exception as e:
+            st.write(f"An Error has occurred \n\n{e}")
+            
         st.session_state.chat_history_csv.append(AIMessage(content=response))
 else:
     st.info("Upload a CSV file to get started.")
