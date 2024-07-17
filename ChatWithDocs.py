@@ -204,15 +204,18 @@ with st.sidebar:
         if st.button("Process", use_container_width=True, type="primary"):
             text_chunks_list = []
             with st.spinner("Processing..."):
-                for file_data in st.session_state.uploaded_files_content:
-                    filename = file_data["name"]
-                    file_content = io.BytesIO(file_data["content"])
-                    file_content.name = filename  # Set the name attribute for compatibility
-                    text = get_documents_text(file_content)
-                    text_chunks = get_text_chunks(text, filename)
-                    text_chunks_list.extend(text_chunks)
-                st.session_state.vectorstore = get_vectorstore(text_chunks_list)
-            st.session_state.files_processed = True
+                try:
+                    for file_data in st.session_state.uploaded_files_content:
+                        filename = file_data["name"]
+                        file_content = io.BytesIO(file_data["content"])
+                        file_content.name = filename  # Set the name attribute for compatibility
+                        text = get_documents_text(file_content)
+                        text_chunks = get_text_chunks(text, filename)
+                        text_chunks_list.extend(text_chunks)
+                    st.session_state.vectorstore = get_vectorstore(text_chunks_list)
+                    st.session_state.files_processed = True
+                except Exception as e:
+                    st.write(f"An Error has occurred \n\n{e}")
 
 
 
@@ -254,11 +257,15 @@ if st.session_state.files_processed:
             st.write(user_query)
 
         with st.spinner("Thinking..."):
-            response = get_response(user_query, llm)
+            try:
+                response = get_response(user_query, llm)
             
-            with st.chat_message("AI", avatar="bot.png"):
-                st.write(response)
-
+                with st.chat_message("AI", avatar="bot.png"):
+                    st.write(response)
+            
+            except Exception as e:
+                st.write(f"An Error has occurred \n\n{e}")
+                
         st.session_state.chat_history_docs.append(AIMessage(content=response))
 else:
     st.info("Please upload and process the files to start chatting.")
